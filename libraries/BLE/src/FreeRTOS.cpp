@@ -63,9 +63,12 @@ uint32_t FreeRTOS::Semaphore::wait(std::string owner) {
 	log_v(">> wait: Semaphore waiting: %s for %s", toString().c_str(), owner.c_str());
 	
 	if (m_usePthreads) {
+		log_e("using pthreads");
 		pthread_mutex_lock(&m_pthread_mutex);
 	} else {
+		log_v("xSemaphoretake");
 		xSemaphoreTake(m_semaphore, portMAX_DELAY);
+		log_v("xSemaphoreTake done");
 	}
 
 	if (m_usePthreads) {
@@ -193,8 +196,8 @@ bool FreeRTOS::Semaphore::take(std::string owner) {
 	} else {
 		rc = ::xSemaphoreTake(m_semaphore, portMAX_DELAY) == pdTRUE;
 	}
-	m_owner = owner;
 	if (rc) {
+		m_owner = owner;
 		log_v("Semaphore taken:  %s", toString().c_str());
 	} else {
 		log_e("Semaphore NOT taken:  %s", toString().c_str());
@@ -218,8 +221,8 @@ bool FreeRTOS::Semaphore::take(uint32_t timeoutMs, std::string owner) {
 	} else {
 		rc = ::xSemaphoreTake(m_semaphore, timeoutMs / portTICK_PERIOD_MS) == pdTRUE;
 	}
-	m_owner = owner;
 	if (rc) {
+		m_owner = owner;
 		log_v("Semaphore taken:  %s", toString().c_str());
 	} else {
 		log_e("Semaphore NOT taken:  %s", toString().c_str());
@@ -257,12 +260,7 @@ void FreeRTOS::Semaphore::setName(std::string name) {
  * @param [in] length The amount of storage to allocate for the ring buffer.
  * @param [in] type The type of buffer.  One of RINGBUF_TYPE_NOSPLIT, RINGBUF_TYPE_ALLOWSPLIT, RINGBUF_TYPE_BYTEBUF.
  */
-#ifdef ESP_IDF_VERSION_MAJOR
-Ringbuffer::Ringbuffer(size_t length, RingbufferType_t type)
-#else
-Ringbuffer::Ringbuffer(size_t length, ringbuf_type_t type)
-#endif
-{
+Ringbuffer::Ringbuffer(size_t length, RingbufferType_t type) {
 	m_handle = ::xRingbufferCreate(length, type);
 } // Ringbuffer
 

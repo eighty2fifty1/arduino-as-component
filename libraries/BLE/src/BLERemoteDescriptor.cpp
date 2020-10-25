@@ -130,6 +130,7 @@ std::string BLERemoteDescriptor::toString() {
  * @param [in] response True if we expect a response.
  */
 void BLERemoteDescriptor::writeValue(uint8_t* data, size_t length, bool response) {
+	
 	log_v(">> writeValue: %s", toString().c_str());
 	// Check to see that we are connected.
 	if (!getRemoteCharacteristic()->getRemoteService()->getClient()->isConnected()) {

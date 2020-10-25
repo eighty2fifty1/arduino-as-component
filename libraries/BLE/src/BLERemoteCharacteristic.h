@@ -52,6 +52,7 @@ public:
 	void        writeValue(uint8_t newValue, bool response = false);
 	std::string toString();
 	uint8_t*	readRawData();
+	BLERemoteService* getRemoteService();
     void        setAuth(esp_gatt_auth_req_t auth);
 
 private:
@@ -63,7 +64,6 @@ private:
 	// Private member functions
 	void gattClientEventHandler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if, esp_ble_gattc_cb_param_t* evtParam);
 
-	BLERemoteService* getRemoteService();
 	void              removeDescriptors();
 	void              retrieveDescriptors();
 
